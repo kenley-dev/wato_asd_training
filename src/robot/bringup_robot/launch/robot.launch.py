@@ -6,14 +6,15 @@ from launch_ros.actions import Node
 
 import os
 
+
 def generate_launch_description():
-    ld = LaunchDescription() # Begin building a launch description
+    ld = LaunchDescription()  # Begin building a launch description
 
     #################### Costmap Node #####################
     costmap_pkg_prefix = get_package_share_directory('costmap')
     costmap_param_file = os.path.join(
         costmap_pkg_prefix, 'config', 'params.yaml')
-    
+
     costmap_param = DeclareLaunchArgument(
         'costmap_param_file',
         default_value=costmap_param_file,
@@ -32,7 +33,7 @@ def generate_launch_description():
     map_memory_pkg_prefix = get_package_share_directory('map_memory')
     map_memory_param_file = os.path.join(
         map_memory_pkg_prefix, 'config', 'params.yaml')
-    
+
     map_memory_param = DeclareLaunchArgument(
         'map_memory_param_file',
         default_value=map_memory_param_file,
@@ -46,12 +47,12 @@ def generate_launch_description():
     )
     ld.add_action(map_memory_param)
     ld.add_action(map_memory_node)
-    
+
     ##################### Planner Node #####################
     planner_pkg_prefix = get_package_share_directory('planner')
     planner_param_file = os.path.join(
         planner_pkg_prefix, 'config', 'params.yaml')
-    
+
     planner_param = DeclareLaunchArgument(
         'planner_param_file',
         default_value=planner_param_file,
@@ -65,12 +66,12 @@ def generate_launch_description():
     )
     ld.add_action(planner_param)
     ld.add_action(planner_node)
-    
+
     ##################### Control Node #####################
     control_pkg_prefix = get_package_share_directory('control')
     control_param_file = os.path.join(
         control_pkg_prefix, 'config', 'params.yaml')
-    
+
     control_param = DeclareLaunchArgument(
         'control_param_file',
         default_value=control_param_file,
@@ -94,3 +95,5 @@ def generate_launch_description():
     ld.add_action(odometry_spoof_node)
 
     return ld
+
+# tesing sync between contributors
