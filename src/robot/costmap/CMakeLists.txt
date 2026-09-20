@@ -13,12 +13,9 @@ endif()
 # Search for dependencies required for building this package
 find_package(ament_cmake REQUIRED) # ROS2 build tool
 find_package(rclcpp REQUIRED)      # ROS2 C++ package
+find_package(std_msgs REQUIRED)    # Added std_msgs dependency
 
 # Compiles source files into a library
-# A library is not executed, instead other executables can link
-# against it to access defined methods and classes.
-# We build a library so that the methods defined can be used by
-# both the unit test and ROS2 node executables.
 add_library(costmap_lib
   src/costmap_core.cpp)
 # Indicate to compiler where to search for header files
@@ -31,6 +28,8 @@ ament_target_dependencies(costmap_lib rclcpp)
 add_executable(costmap_node src/costmap_node.cpp)
 # Link to the previously built library to access costmap classes and methods
 target_link_libraries(costmap_node costmap_lib)
+# Add ROS2 dependencies for the node executable
+ament_target_dependencies(costmap_node rclcpp std_msgs)
 
 # Copy executable to installation location
 install(TARGETS
