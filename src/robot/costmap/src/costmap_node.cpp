@@ -10,7 +10,8 @@ CostmapNode::CostmapNode() : Node("costmap"), costmap_(robot::CostmapCore(this->
 }
 
 void CostmapNode::laserScanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
-  RCLCPP_INFO(this->get_logger(), "Received LaserScan message with %zu ranges", msg->ranges.size()); 
+  // pass the incoming LaserScan message to CostmapCore to process the 2D grid
+  costmap_.updateCostmap(msg);
 }
 
 int main(int argc, char ** argv) {
