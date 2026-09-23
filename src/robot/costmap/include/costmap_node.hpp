@@ -2,18 +2,18 @@
 #define COSTMAP_NODE_HPP_
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/laser_scan.hpp" // Include the LaserScan message type
 #include "costmap_core.hpp"
 
 class CostmapNode : public rclcpp::Node {
 public:
   CostmapNode();
-  void publishMessage();
 
 private:
+  void laserScanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+
   robot::CostmapCore costmap_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr string_pub_;
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_scan_sub_;
 };
 
 #endif

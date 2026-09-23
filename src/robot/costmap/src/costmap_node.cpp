@@ -5,15 +5,12 @@
 using namespace std::chrono_literals;
 
 CostmapNode::CostmapNode() : Node("costmap"), costmap_(robot::CostmapCore(this->get_logger())) {
-  string_pub_ = this->create_publisher<std_msgs::msg::String>("/test_topic", 10);
-  timer_ = this->create_wall_timer(500ms, std::bind(&CostmapNode::publishMessage, this));
+  lidar_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>("/lidar",10,
+    std::bind(&CostmapNode::laserScanCallback, this, std::placeholders::_1)); // Subscribe to the /lidar topic with a queue size of 10
 }
 
-void CostmapNode::publishMessage() {
-  auto message = std_msgs::msg::String();
-  message.data = "Hello, ROS 2!";
-  RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", message.data.c_str());
-  string_pub_->publish(message);
+void CostmapNode::laserScanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
+  RCLCPP_INFO(this->get_logger(), "Received LaserScan message with %zu ranges", msg->ranges.size()); 
 }
 
 int main(int argc, char ** argv) {
