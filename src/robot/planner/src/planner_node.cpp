@@ -17,6 +17,12 @@ PlannerNode::PlannerNode() : Node("planner"), planner_(robot::PlannerCore(this->
     std::bind(&PlannerNode::odomCallback, this, std::placeholders::_1)
   );
 
+  path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/path", 10);
+
+  timer_ = this->create_wall_timer(
+    500ms, std::bind(&PlannerNode::timerCallback, this)
+  );
+
 }
 
 void PlannerNode::mapCallback(const nav_msgs::msg::OccupancyGrid::SharedPtr msg) {
@@ -29,6 +35,13 @@ void PlannerNode::goalCallback(const geometry_msgs::msg::PointStamped::SharedPtr
 
 void PlannerNode::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
   planner_.updateOdometry(msg);
+}
+
+void PlannerNode::timerCallback() {
+  if (planner_.shouldReplan()) {
+    nav_msgs::msg::Path planned_path = planner_.planPath();
+    path_pub_->publish(planned_path);
+  }
 }
 
 int main(int argc, char ** argv)
