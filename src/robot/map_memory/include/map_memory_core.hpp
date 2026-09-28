@@ -16,12 +16,20 @@ class MapMemoryCore {
     void updateOdometry(const nav_msgs::msg::Odometry::SharedPtr odom);
 
   private:
+    void initGlobalMap();
+    bool shouldUpdateMap(double current_x, double current_y);
+    void integrateCostmap();
+
     rclcpp::Logger logger_;
 
     nav_msgs::msg::OccupancyGrid::SharedPtr latest_costmap_;
     nav_msgs::msg::Odometry::SharedPtr latest_odom_;
   
     nav_msgs::msg::OccupancyGrid global_map_;
+
+    double last_x_{0.0};
+    double last_y_{0.0};
+    bool is_first_odom_{true};
 };
 
 }  
